@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
+import 'tailwindcss/tailwind.css'; 
 
 const ChartComponent = () => {
   const [chartData, setChartData] = useState({
@@ -15,6 +16,26 @@ const ChartComponent = () => {
         title: {
           text: 'Fees',
         },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+      },
+      title: {
+        text: 'Daily Fees Chart',
+        align: 'left',
+      },
+      grid: {
+        row: {
+          colors: ['#f3f3f3', 'transparent'],
+          opacity: 0.5,
+        },
+      },
+      fill: {
+        type: 'solid',
+        colors: ['rgb(4,140,251)'],
       },
     },
     series: [
@@ -34,12 +55,9 @@ const ChartComponent = () => {
       const response = await fetch('https://api.llama.fi/summary/fees/lyra?dataType=dailyFees');
       const data = await response.json();
 
-      // Assuming data structure: { totalDataChart: [[timestamp1, value1], [timestamp2, value2], ...] }
       const totalData = data.totalDataChart || [];
-
-      // Convert timestamp to human-readable format
       const formattedData = totalData.map(([timestamp, value]) => ({
-        x: timestamp * 1000, // ApexCharts expects timestamps in milliseconds
+        x: timestamp * 1000,
         y: value,
       }));
 
@@ -58,12 +76,14 @@ const ChartComponent = () => {
   };
 
   return (
-    <Chart
-      options={chartData.options}
-      series={chartData.series}
-      type="line"
-      height={350}
-    />
+    <div >
+      <Chart
+        options={chartData.options}
+        series={chartData.series}
+        type="area"
+        height={350}
+      />
+    </div>
   );
 };
 
