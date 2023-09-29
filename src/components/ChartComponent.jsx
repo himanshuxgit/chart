@@ -2,7 +2,28 @@ import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 
 const ChartComponent = () => {
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState({
+    options: {
+      chart: {
+        type: 'line',
+        height: 350,
+      },
+      xaxis: {
+        type: 'datetime',
+      },
+      yaxis: {
+        title: {
+          text: 'Fees',
+        },
+      },
+    },
+    series: [
+      {
+        name: 'Daily Fees',
+        data: [],
+      },
+    ],
+  });
 
   useEffect(() => {
     fetchData();
@@ -18,21 +39,12 @@ const ChartComponent = () => {
 
       // Convert timestamp to human-readable format
       const formattedData = totalData.map(([timestamp, value]) => ({
-        x: new Date(timestamp * 1000).toLocaleDateString(),
+        x: timestamp * 1000, // ApexCharts expects timestamps in milliseconds
         y: value,
       }));
 
       setChartData({
-        options: {
-          xaxis: {
-            type: 'datetime',
-          },
-          yaxis: {
-            title: {
-              text: 'Fees',
-            },
-          },
-        },
+        ...chartData,
         series: [
           {
             name: 'Daily Fees',
@@ -50,7 +62,7 @@ const ChartComponent = () => {
       options={chartData.options}
       series={chartData.series}
       type="line"
-      width="500"
+      height={350}
     />
   );
 };
